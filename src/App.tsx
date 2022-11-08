@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ReactElement, useState } from 'react'
 
-function App() {
+import './App.css'
+import { ReactComponent as Svg } from './assets/shuffle.svg'
+import { Container, Footer, Header, TextSection } from './styles'
+import { Button, FilmDefail } from './components'
+import { FilmClienteAPI } from './api'
+import { IDataGetFilm } from './api/FilmClienteAPI'
+
+const filmClienteAPI = new FilmClienteAPI()
+
+const App = (): ReactElement => {
+  const [dataFilm, setDataFilm] = useState<IDataGetFilm | undefined>()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const searchFilm = () => {
+    setLoading(true)
+    filmClienteAPI.getRandomFilm()
+    .then((response: IDataGetFilm) => {
+      setDataFilm(response)
+    })
+    .then(() => setLoading(false))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Container>
+        <Header>
+          <Svg style={{width: "100px"}}/>
+          <b>Não sabe oque assistir?</b>
+        </Header>
+
+        <FilmDefail
+          dataFilm={dataFilm}
+          loading={loading}
+        />
+
+        <Footer>
+          <Button onClick={():void => searchFilm()}>
+            Encontrar filme
+          </Button>
+          <TextSection>
+            Clique em "Encontrar filme" que traremos informações<br />de algum filme para você assistir hoje.
+          </TextSection>
+        </Footer>
+      </Container>
+    </>
   );
 }
 
-export default App;
+export { App }
+export default App
