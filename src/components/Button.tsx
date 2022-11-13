@@ -56,12 +56,14 @@ interface IButton {
   children: React.ReactNode
   /* Função de callback ao clickar no botão */
   onClick(): void,
+  /* Flag para dizer se deu erro na busca do filme */
+  error: boolean,
 }
 
 const Button = (props: IButton): ReactElement => {
   return(
     <>
-      <ButtonStyled onClick={props.onClick}>
+      <ButtonStyled disabled={props.error} onClick={props.onClick}>
         <Svg style={{width: "50px", marginRight: "25px"}}/>
         <b>{props.children}</b>
       </ButtonStyled>
